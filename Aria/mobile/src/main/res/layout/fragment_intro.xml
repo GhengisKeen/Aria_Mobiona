@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bm_bg_intro">
+
+    <Button
+        android:id="@+id/b_intro_connect"
+        android:text="connect"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="240dp"
+        android:background="@drawable/sl_bg_button"
+        android:textColor="@color/text_button"/>
+
+    <TextView
+        android:id="@+id/tv_intro_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/pb_intro_loader"
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:textColor="@color/text"/>
+
+    <ProgressBar
+        android:id="@+id/pb_intro_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        style="?android:attr/progressBarStyleSmall"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">Aria</string>
+
+    <string name="title_section1">Dashboard</string>
+    <string name="title_section2">Calibration</string>
+    <string name="title_section3">Test</string>
+    <string name="title_section4">Settings</string>
+
+</resources>

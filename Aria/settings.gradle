@@ -1,0 +1,3 @@
+include ':mobile', ':wear', ':ariaSdk'
+
+project(':ariaSdk').projectDir = new File(settingsDir, '../AriaSdk/app')

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Calibration"
+        android:id="@+id/tv_start_cal_title"
+        android:layout_gravity="center"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@color/bg2"
+        android:textColor="@color/text_button"/>
+
+    <Button
+        android:id="@+id/b_start_cal_start"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:background="@drawable/sl_bg_button"
+        android:textColor="@color/text_button"
+        android:text="Start calibration"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

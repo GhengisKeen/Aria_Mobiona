@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bm_bg_all">
+
+    <Button
+        android:id="@+id/b_dashboard_disconnect"
+        android:text="disconnect"
+        android:layout_width="130dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="135dp"
+        android:background="@drawable/sl_bg_button"
+        android:textColor="@color/text_button"/>
+
+
+    <ListView
+        android:id="@+id/lv_dashboard_menu"
+        android:layout_width="170dp"
+        android:layout_height="220dp"
+        android:layout_below="@+id/b_dashboard_disconnect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:dividerHeight="20dp"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        tools:listitem="@layout/item_menu"/>
+
+</RelativeLayout>

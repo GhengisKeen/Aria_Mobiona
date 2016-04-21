@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="shared_preferences_key">com.deus_tech.aria.SHARED_PREFERENCES</string>
+    <string name="gopro_ssid">com.deus_tech.aria.GOPRO_SSID</string>
+    <string name="gopro_password">com.deus_tech.aria.GOPRO_PASSWORD</string>
+
+</resources>
