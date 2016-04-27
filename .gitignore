@@ -6,3 +6,9 @@ local.properties
 build
 
 Aria/Aria.iml
+
+Aria/mobile/mobile.iml
+
+Aria/wear/wear.iml
+
+AriaSdk/app/ariaSdk.iml
