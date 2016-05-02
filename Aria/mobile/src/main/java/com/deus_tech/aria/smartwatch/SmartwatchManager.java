@@ -4,7 +4,6 @@ package com.deus_tech.aria.smartwatch;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -191,6 +190,7 @@ public class SmartwatchManager implements DataApi.DataListener, GoogleApiClient.
     public void onConnectionFailed(ConnectionResult connectionResult){
 
         isConnected = false;
+        int errorCode=connectionResult.getErrorCode();
 
         for(int i=0 ; i<listeners.size() ; i++){
             listeners.get(i).onApiDisconnected();

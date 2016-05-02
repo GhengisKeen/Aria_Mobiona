@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.deus_tech.aria.MainActivity;
 import com.deus_tech.aria.R;
@@ -52,13 +51,10 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         aria = Aria.getInstance(this);
         aria.addListener(this);
-
         smartwatchManager = new SmartwatchManager(this);
         smartwatchManager.addListener(this);
-
         goProManager = new GoProManager(this);
         goProManager.addListener(this);
-
         musicManager = new MusicManager(this);
 
     }//onCreate

@@ -10,15 +10,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 
-import com.deus_tech.ariasdk.ariaBleService.ArsInitListener;
 import com.deus_tech.ariasdk.ariaBleService.AriaBleService;
+import com.deus_tech.ariasdk.ariaBleService.ArsInitListener;
 import com.deus_tech.ariasdk.ble.BluetoothBroadcastListener;
 import com.deus_tech.ariasdk.ble.BluetoothBroadcastReceiver;
 import com.deus_tech.ariasdk.ble.BluetoothGattCallback;
 import com.deus_tech.ariasdk.ble.ConnectionGattListener;
-import com.deus_tech.ariasdk.calibrationBleService.CasInitListener;
+import com.deus_tech.ariasdk.ble.LeScanCallback;
 import com.deus_tech.ariasdk.calibrationBleService.CalibrationBleService;
+import com.deus_tech.ariasdk.calibrationBleService.CasInitListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,6 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
     public final static int STATUS_CONNECTING = 4;
     public final static int STATUS_CONNECTED = 5;
     public final static int STATUS_READY = 6;
-
 
     private static Aria instance;
     private Context context;
@@ -54,6 +55,12 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
     //services
     private CalibrationBleService cas;
     private AriaBleService ars;
+    // Handler to handel scanning process
+    private Handler handler;
+    private static final long SCAN_PERIOD = 10000;
+    private LeScanCallback leScanCallback;
+    private boolean mScanning;
+
 
 
     public static Aria getInstance(Context _context){
@@ -61,7 +68,6 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
         if (Aria.instance == null){
             Aria.instance = new Aria(_context);
         }
-
         return Aria.instance;
 
     }//getInstance
@@ -105,28 +111,33 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
     public void startDiscovery(){
 
         device = null;
-
         if(btAdapter != null && btAdapter.isEnabled() == false){
 
             IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             context.registerReceiver(this, filter);
-
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             enableIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(enableIntent);
 
         }else{
-
-            btAdapter.startDiscovery();
+           /*
+               Edit By Bharat
+            */
+            if(!mScanning) {
+                startLeScan(true);
+            }
+            // instead of discovering in normal way we can do it by scanning only the Ble Devices
+            //btAdapter.startDiscovery();
+            //btAdapter.startLeScan()
 
         }
 
-    }//startDiscovery
+    }///startDiscovery
 
 
     public void stopDiscovery(){
-
-        btAdapter.cancelDiscovery();
+         startLeScan(false);
+        //btAdapter.cancelDiscovery();
 
     }//stopDiscovery
 
@@ -134,7 +145,6 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
     public void connect(){
 
         if(device != null){
-
             status = Aria.STATUS_CONNECTING;
             btGatt = device.connectGatt(context, false, btGattCallback);
 
@@ -168,8 +178,11 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
 
         btManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
-        initBtBroadcastReceiver();
+        // Create the handler Instance
+        handler=new Handler();
+        //initBtBroadcastReceiver();
         initBtGattCallback();
+        initLeScanCallback();
 
         listeners = new ArrayList<AriaConnectionListener>();
         status = Aria.STATUS_NONE;
@@ -177,7 +190,7 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
     }//constructor
 
 
-    private void initBtBroadcastReceiver(){
+   private void initBtBroadcastReceiver(){
 
         btBroadcastReceiver = new BluetoothBroadcastReceiver();
         btBroadcastReceiver.setListener(this);
@@ -190,15 +203,15 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
         //filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         //filter.addAction(BluetoothDevice.ACTION_CLASS_CHANGED);
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        //filter.addAction(BluetoothDevice.ACTION_FOUND);
         //filter.addAction(BluetoothDevice.ACTION_NAME_CHANGED);
         //filter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
         //filter.addAction(BluetoothDevice.ACTION_UUID);
 
         //http://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html
         //filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        //filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        //filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         //filter.addAction(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED);
         //filter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         //filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -206,6 +219,7 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
         context.registerReceiver(btBroadcastReceiver, filter);
 
     }//initBtBroadcastReceiver
+
 
 
     private void initBtGattCallback(){
@@ -349,6 +363,29 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
         }
 
     }//onArsInit
+    private void initLeScanCallback(){
+     leScanCallback=new LeScanCallback();
+     leScanCallback.setListner(this);
 
+    }
+    private void startLeScan(boolean enabled){
+        if(enabled){
+            mScanning=true;
+           handler.postDelayed(new Runnable() {
+               @Override
+               public void run() {
+                   mScanning=false;
+                  onDiscoveryFinished();
+                 btAdapter.stopLeScan(leScanCallback);
+               }
+           },SCAN_PERIOD);
+            btAdapter.startLeScan(leScanCallback);
+            onDiscoveryStarted();
+        }else{
+            mScanning=true;
+           btAdapter.stopLeScan(leScanCallback);
+            onDiscoveryFinished();
+        }
+    }
 
 }//Aria
