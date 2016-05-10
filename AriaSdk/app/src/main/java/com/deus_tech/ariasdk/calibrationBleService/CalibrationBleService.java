@@ -228,42 +228,42 @@ public class CalibrationBleService implements CasGattListener{
 
     //read
 
-    private void readCalibrationQuality(){
+    public void readCalibrationQuality(){
 
         btGatt.readCharacteristic(calibrationQualityChar);
 
     }//readCalibrationQuality
 
 
-    private void readCalibrationDatetime(){
+    public void readCalibrationDatetime(){
 
         btGatt.readCharacteristic(calibrationDatetimeChar);
 
     }//readCalibrationDatetime
 
 
-    private void readCalibrationMode(){
+    public void readCalibrationMode(){
 
         btGatt.readCharacteristic(calibrationModeChar);
 
     }//readCalibrationMode
 
 
-    private void readGestureIndex(){
+    public void readGestureIndex(){
 
         btGatt.readCharacteristic(gestureIndexChar);
 
     }//readGestureIndex
 
 
-    private void readGestureIteration(){
+    public void readGestureIteration(){
 
         btGatt.readCharacteristic(gestureIterationChar);
 
     }//readGestureIteration
 
 
-    private void readGestureStatus(){
+    public void readGestureStatus(){
 
         btGatt.readCharacteristic(gestureStatusChar);
 
@@ -301,7 +301,7 @@ public class CalibrationBleService implements CasGattListener{
         gestureIterationChar.setValue(_iteration, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
         btGatt.writeCharacteristic(gestureIterationChar);
 
-    }//writeGestureIteration
+    }//
 
 
     private void writeGestureStatus(int _status){

@@ -1,6 +1,11 @@
 package com.deus_tech.aria;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,25 +18,23 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
+import com.deus_tech.aria.ariaservice.AriaService;
+import com.deus_tech.aria.ariaservice.AriaServiceBinder;
 import com.deus_tech.aria.calibration.CalibrationFragment;
 import com.deus_tech.aria.dashboard.DashboardFragment;
 import com.deus_tech.aria.gopro.GoProFragment;
 import com.deus_tech.aria.intro.IntroFragment;
 import com.deus_tech.aria.music.MusicFragment;
-import com.deus_tech.aria.smartphone.SmartphoneListener;
 import com.deus_tech.aria.smartphone.SmartphoneManager;
-import com.google.android.gms.wearable.DataMap;
-
 import com.deus_tech.aria.test.TestFragment;
 
 
-public class MainActivity extends FragmentActivity implements SmartphoneListener{
+public class MainActivity extends FragmentActivity implements ServiceConnection{
 
 
-    public SmartphoneManager smartphoneManager;
     private int currentView;
     public boolean isRound;
-
+    public AriaService ariaService;
 
     protected void onCreate(Bundle savedInstanceState){
 
@@ -42,15 +45,21 @@ public class MainActivity extends FragmentActivity implements SmartphoneListener
         setContentView(R.layout.activity_main_stub);
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub_main);
-        stub.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(){
+        stub.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
 
             @Override
-            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets){
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
 
                 stub.onApplyWindowInsets(windowInsets);
                 isRound = windowInsets.isRound();
 
                 return windowInsets;
+            }
+        });
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub watchViewStub) {
+
             }
         });
 
@@ -72,31 +81,20 @@ public class MainActivity extends FragmentActivity implements SmartphoneListener
     protected void onStart(){
 
         super.onStart();
-
-        smartphoneManager = new SmartphoneManager(this);
-        smartphoneManager.addListener(this);
-        smartphoneManager.connect();
-
+        startAndBindAriaService();
     }//onStart
 
 
     protected void onStop(){
 
         super.onStop();
+        stopAndUnbindAriaService(); 
 
-        smartphoneManager.disconnect();
-        smartphoneManager.removeListener(this);
 
     }//onStop
 
 
-    public void changeCurrentView(int _currentView){
-
-        DataMap map = new DataMap();
-        map.putInt(SmartphoneManager.ROUTER_VIEW, _currentView);
-        smartphoneManager.writeSharedData(SmartphoneManager.ROUTER_PATH, map);
-
-    }//changeCurrentView
+   //changeCurrentView
 
 
     private void doRouting(int _viewToShow){
@@ -136,15 +134,15 @@ public class MainActivity extends FragmentActivity implements SmartphoneListener
 
     private void showFragment(final Fragment _fragment, final boolean _isSameView){
 
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
 
-            public void run(){
+            public void run() {
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.popBackStackImmediate();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                if(_isSameView == false){
+                if (_isSameView == false) {
                     transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 }
 
@@ -159,56 +157,10 @@ public class MainActivity extends FragmentActivity implements SmartphoneListener
 
     //smartphone manager
 
-    public void onApiConnected(){
 
-        Log.d("debug", "[main] onApiConnected");
-
-        smartphoneManager.readSharedData(SmartphoneManager.ROUTER_PATH);
-
-    }//onApiConnected
+    //onSharedDataNotFound
 
 
-    public void onApiDisconnected(){
-
-        Log.d("debug", "[main] onApiDisconnected");
-
-        doRouting(-1);
-
-    }//onApiDisconnected
-
-
-    public void onSharedDataRead(String _path, DataMap _dataMap){
-
-        Log.d("debug", "[main] onSharedDataRead");
-
-        if(_path.equals(SmartphoneManager.ROUTER_PATH) == false) return;
-
-        int viewToShow = _dataMap.getInt(SmartphoneManager.ROUTER_VIEW, -1);
-        doRouting(viewToShow);
-
-    }//onSharedDataRead
-
-
-    public void onSharedDataNotFound(String _path){
-
-        if(_path.equals(SmartphoneManager.ROUTER_PATH) == false) return;
-
-        Log.d("debug", "[main] onSharedDataNotFound");
-        doRouting(-1);
-
-    }//onSharedDataNotFound
-
-
-    public void onSharedDataChanged(String _path, DataMap _dataMap){
-
-        Log.d("debug", "[main] onSharedDataChanged");
-
-        if(_path.equals(SmartphoneManager.ROUTER_PATH) == false) return;
-
-        int viewToShow = _dataMap.getInt(SmartphoneManager.ROUTER_VIEW, -1);
-        doRouting(viewToShow);
-
-    }//onSharedDataChanged
 
 
     public void onGestureReceived(String _gesture){
@@ -221,6 +173,37 @@ public class MainActivity extends FragmentActivity implements SmartphoneListener
         vibrator.vibrate(vibrationPattern, indexInPatternToRepeat);
 
     }//onGestureReceived
+    public void startAndBindAriaService(){
+
+        Intent ariaIntent = new Intent(this, AriaService.class);
+        ariaIntent.setAction(AriaService.START_FOREGROUND_ACTION);
+        startService(ariaIntent);
+        bindService(ariaIntent, this, Context.BIND_AUTO_CREATE);
+
+    }
+    public void stopAndUnbindAriaService(){
+
+        unbindService(this);
+        ariaService.stopForegroundIfAriaIsDisconnected();
+
+    }
 
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        AriaServiceBinder ariaBinder = (AriaServiceBinder) service;
+        ariaBinder.setMainActivity(this);
+        ariaService = ariaBinder.getService();
+        if(ariaService!=null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroFragment()).commit();
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+    public void onAriaConnected(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,new DashboardFragment()).commit();
+    }
 }//RouterActivity

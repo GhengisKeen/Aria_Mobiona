@@ -6,12 +6,11 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.wearable.view.WearableListView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.deus_tech.aria.MainActivity;
 import com.deus_tech.aria.R;
@@ -28,9 +27,10 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
 
     private MainActivity mainActivity;
 
-    private ListView lvMenu;
+    private WearableListView lvMenu;
     private MenuAdapter menuAdapter;
     private int menuIndex;
+    private DashBoardAdapter dashBoardAdapter;
     private AppModel menuSelectedModel;
 
 
@@ -39,17 +39,19 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.smartphoneManager.addListener(this);
+        //mainActivity.smartphoneManager.addListener(this);
 
         View rootView = null;
 
-        if(mainActivity.isRound){
+        /*if(mainActivity.isRound){
             rootView = inflater.inflate(R.layout.fragment_dashboard_round, container, false);
         }else{
             rootView = inflater.inflate(R.layout.fragment_dashboard_rect, container, false);
-        }
+        }*/
+        rootView=inflater.inflate(R.layout.fragment_dashboard_round,container,false);
 
-        lvMenu = (ListView) rootView.findViewById(R.id.lv_dashboard_menu);
+        WearableListView wearableListView=(WearableListView)rootView.findViewById(R.id.lv_dashboard_menu);
+        lvMenu = (WearableListView) rootView.findViewById(R.id.lv_dashboard_menu);
         initList();
 
         return rootView;
@@ -80,23 +82,20 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
                 String label = (String) pm.getApplicationLabel(packageInfo);
                 Drawable icon = pm.getApplicationIcon(packageInfo);
                 AppModel p = new AppModel(label, packageInfo.packageName, icon);
-
                 list.add(p);
-
             }
 
         }
 
         //3. set adapter
-        if(mainActivity.isRound){
+       /* if(mainActivity.isRound){
             menuAdapter = new MenuAdapter(mainActivity, R.layout.item_menu_round, list);
         }else{
             menuAdapter = new MenuAdapter(mainActivity, R.layout.item_menu_rect, list);
-        }
+        }*/
+        dashBoardAdapter=new DashBoardAdapter(list);
+        lvMenu.setAdapter(dashBoardAdapter);
 
-        lvMenu.setAdapter(menuAdapter);
-
-        lvMenu.setOnItemClickListener(this);
 
     }//initList
 
@@ -105,7 +104,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
 
         super.onStart();
 
-        mainActivity.smartphoneManager.readSharedData(SmartphoneManager.DASHBOARD_PATH);
+        //mainActivity.smartphoneManager.readSharedData(SmartphoneManager.DASHBOARD_PATH);
 
     }//onStart
 
@@ -114,7 +113,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
 
         super.onDestroyView();
 
-        mainActivity.smartphoneManager.removeListener(this);
+        //mainActivity.smartphoneManager.removeListener(this);
 
     }//onDestroyView
 
@@ -130,7 +129,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
                 }
 
                 if(menuIndex >= 0){
-                    menuSelectedModel = (AppModel) lvMenu.getItemAtPosition(menuIndex);
+                   // menuSelectedModel = (AppModel) lvMenu.getItemAtPosition(menuIndex);
                     menuSelectedModel.setSelected(true);
                 }
 
@@ -160,7 +159,7 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
 
         DataMap map = new DataMap();
         map.putInt(SmartphoneManager.DASHBOARD_MENU_ITEM, menuIndex);
-        mainActivity.smartphoneManager.writeSharedData(SmartphoneManager.DASHBOARD_PATH, map);
+        //mainActivity.smartphoneManager.writeSharedData(SmartphoneManager.DASHBOARD_PATH, map);
 
     }//changeCurrentMenuIndex
 
@@ -168,13 +167,13 @@ public class DashboardFragment extends Fragment implements AdapterView.OnItemCli
     private void openCurrentItem(){
 
         if(menuIndex == 0){
-            mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_GOPRO);
+           // mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_GOPRO);
         }else if(menuIndex == 1){
-            mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_MUSIC);
+            //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_MUSIC);
         }else if(menuIndex == 2){
-            mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_START_CALIBRATION);
+            //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_START_CALIBRATION);
         }else if(menuIndex == 3){
-            mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_TEST);
+            //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_TEST);
         }else if(menuIndex > 3){
             String appToLaunch = menuAdapter.getItem(menuIndex).getPackageName();
             PackageManager pm = mainActivity.getPackageManager();

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.deus_tech.aria.dashboard.WearableListItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginLeft="10dp">
+    <android.support.wearable.view.CircledImageView
+        android:id="@+id/circle"
+        app:circle_color="@color/dark_blue"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="16dp"
+        android:layout_width="20dip"
+        android:layout_height="20dip"/>
+    <TextView android:id="@+id/name"
+        android:fontFamily="sans-serif-condensed-light"
+        android:textColor="@color/dark_blue"
+        android:textSize="16sp"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</com.deus_tech.aria.dashboard.WearableListItemLayout>

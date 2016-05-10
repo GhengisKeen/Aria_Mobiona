@@ -3,7 +3,6 @@ package com.deus_tech.aria.intro;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.deus_tech.aria.MainActivity;
+import com.deus_tech.aria.R;
 import com.deus_tech.aria.ariaService.AriaService;
 import com.deus_tech.aria.smartwatch.SmartwatchManager;
 import com.deus_tech.ariasdk.Aria;
 import com.deus_tech.ariasdk.AriaConnectionListener;
-import com.deus_tech.aria.R;
-import com.google.android.gms.wearable.DataMap;
 
 public class IntroFragment extends Fragment implements View.OnClickListener, AriaConnectionListener{
 

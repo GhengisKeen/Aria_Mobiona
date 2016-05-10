@@ -3,7 +3,6 @@ package com.deus_tech.aria.test;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,7 @@ public class TestFragment extends Fragment implements View.OnClickListener, Smar
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.smartphoneManager.addListener(this);
-
+        //mainActivity.smartphoneManager.addListener(this);
         View rootView = null;
 
         if(mainActivity.isRound){
@@ -70,7 +68,7 @@ public class TestFragment extends Fragment implements View.OnClickListener, Smar
 
         super.onDestroyView();
 
-        mainActivity.smartphoneManager.removeListener(this);
+        //mainActivity.smartphoneManager.removeListener(this);
 
     }//onDestroyView
 
@@ -101,7 +99,7 @@ public class TestFragment extends Fragment implements View.OnClickListener, Smar
 
     public void close(){
 
-        mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
+        //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
 
     }//close
 

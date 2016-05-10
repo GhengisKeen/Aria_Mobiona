@@ -4,6 +4,8 @@
     <style name="AppTheme" parent="Theme.Wearable">
 
         <item name="android:colorBackground">@color/bg1</item>
+        <item name="android:colorPrimary">@color/dark_blue</item>
+        <item name="android:colorAccent">@color/dark_blue</item>
 
     </style>
 

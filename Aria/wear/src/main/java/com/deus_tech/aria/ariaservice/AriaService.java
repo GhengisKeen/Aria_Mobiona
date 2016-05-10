@@ -1,4 +1,4 @@
-package com.deus_tech.aria.ariaService;
+package com.deus_tech.aria.ariaservice;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,11 +11,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.deus_tech.aria.MainActivity;
 import com.deus_tech.aria.R;
-import com.deus_tech.aria.gopro.GoProListener;
-import com.deus_tech.aria.gopro.GoProManager;
-import com.deus_tech.aria.music.MusicManager;
-import com.deus_tech.aria.smartwatch.SmartwatchListener;
-import com.deus_tech.aria.smartwatch.SmartwatchManager;
 import com.deus_tech.ariasdk.Aria;
 import com.deus_tech.ariasdk.AriaConnectionListener;
 import com.deus_tech.ariasdk.ariaBleService.AriaBleService;
@@ -23,7 +18,7 @@ import com.deus_tech.ariasdk.ariaBleService.ArsListener;
 import com.google.android.gms.wearable.DataMap;
 
 
-public class AriaService extends Service implements AriaConnectionListener, ArsListener, SmartwatchListener, GoProListener{
+public class AriaService extends Service implements AriaConnectionListener, ArsListener{
 
 
     public final static int SERVICE_NOTIFICATION_ID = 8588;
@@ -33,9 +28,6 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
 
     public Aria aria;
-    public SmartwatchManager smartwatchManager;
-    public GoProManager goProManager;
-    public MusicManager musicManager;
     private AriaServiceBinder ariaServiceBinder;
     private boolean isClosing;
     private int currentMode;
@@ -51,22 +43,18 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         aria = Aria.getInstance(this);
         aria.addListener(this);
-        smartwatchManager = new SmartwatchManager(this);
-        smartwatchManager.addListener(this);
-        goProManager = new GoProManager(this);
-        goProManager.addListener(this);
-        musicManager = new MusicManager(this);
+
 
     }//onCreate
 
 
     public int onStartCommand(Intent intent, int flags, int startId){
 
-        if(intent.getAction().equals(com.deus_tech.aria.ariaService.AriaService.START_FOREGROUND_ACTION)){
+        if(intent.getAction().equals(com.deus_tech.aria.ariaservice.AriaService.START_FOREGROUND_ACTION)){
 
-            //startForeground();
+            startForeground();
 
-        }else if (intent.getAction().equals(com.deus_tech.aria.ariaService.AriaService.CLOSE_APP_ACTION)){
+        }else if (intent.getAction().equals(com.deus_tech.aria.ariaservice.AriaService.CLOSE_APP_ACTION)){
 
             isClosing = true;
             closeApp();
@@ -130,7 +118,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         Intent closeIntent = new Intent(this, AriaService.class);
-        closeIntent.setAction(com.deus_tech.aria.ariaService.AriaService.CLOSE_APP_ACTION);
+        closeIntent.setAction(com.deus_tech.aria.ariaservice.AriaService.CLOSE_APP_ACTION);
         PendingIntent pendingCloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
 
 
@@ -139,7 +127,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
                 .setContentTitle(this.getNotificationTitle())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.ic_notification_close, "Close", pendingCloseIntent)
+                .addAction(R.drawable.ic_bluetooth, "Close", pendingCloseIntent)
                 .build();
 
         return notification;
@@ -186,18 +174,6 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
     public void onSharedDataChanged(String _path, DataMap _dataMap){
 
-        if(_path.equals(SmartwatchManager.ROUTER_PATH) == false) return;
-
-        currentMode = _dataMap.getInt(SmartwatchManager.ROUTER_VIEW, -1);
-
-        if(currentMode == SmartwatchManager.ROUTER_VIEW_GOPRO){
-
-            goProManager.connect();
-            DataMap map = new DataMap();
-            map.putInt(SmartwatchManager.GOPRO_STATUS, SmartwatchManager.GOPRO_STATUS_SEARCHING);
-            smartwatchManager.writeSharedData(SmartwatchManager.GOPRO_PATH, map);
-
-        }
 
     }//onSharedDataChanged
 
@@ -228,9 +204,6 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
             updateNotification();
         }
 
-        DataMap map = new DataMap();
-        map.putInt(SmartwatchManager.ROUTER_VIEW, SmartwatchManager.ROUTER_VIEW_INTRO);
-        smartwatchManager.writeSharedData(SmartwatchManager.ROUTER_PATH, map);
 
     }//onDisconnected
 
@@ -239,29 +212,29 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         if(_gesture == AriaBleService.GESTURE_HOME){
 
-            smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_HOME);
+            //smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_HOME);
 
         }else if(_gesture == AriaBleService.GESTURE_BACK){
 
-            smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_BACK);
+            //smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_BACK);
 
         }else if(_gesture == AriaBleService.GESTURE_ENTER){
 
-            smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_ENTER);
+            //smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_ENTER);
 
         }else if(_gesture == AriaBleService.GESTURE_UP){
 
-            smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_UP);
+            //smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_UP);
 
         }else if(_gesture == AriaBleService.GESTURE_DOWN){
 
-            smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_DOWN);
+            //smartwatchManager.sendMessage(SmartwatchManager.ARIA_MESSAGE_DOWN);
 
         }
 
 
 
-        if(currentMode == SmartwatchManager.ROUTER_VIEW_GOPRO){
+        /*if(currentMode == SmartwatchManager.ROUTER_VIEW_GOPRO){
 
             onGestureForGoPro(_gesture);
 
@@ -269,7 +242,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
             onGestureForMusic(_gesture);
 
-        }
+        }*/
 
     }//onGesturePerformed
 
@@ -279,7 +252,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
         if(_gesture == AriaBleService.GESTURE_HOME){
 
             //none
-            goProManager.doAction(GoProManager.ACTION_END_CAPTURE);
+            //goProManager.doAction(GoProManager.ACTION_END_CAPTURE);
 
         }else if(_gesture == AriaBleService.GESTURE_BACK){
 
@@ -287,7 +260,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         }else if(_gesture == AriaBleService.GESTURE_ENTER){
 
-            goProManager.doAction(GoProManager.ACTION_START_CAPTURE);
+            //goProManager.doAction(GoProManager.ACTION_START_CAPTURE);
 
         }else if(_gesture == AriaBleService.GESTURE_UP){
 
@@ -295,7 +268,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         }else if(_gesture == AriaBleService.GESTURE_DOWN){
 
-            goProManager.doAction(GoProManager.ACTION_CHANGE_MODE);
+            //goProManager.doAction(GoProManager.ACTION_CHANGE_MODE);
 
         }
 
@@ -314,7 +287,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         }else if(_gesture == AriaBleService.GESTURE_ENTER){
 
-            musicManager.togglePause();
+            //musicManager.togglePause();
 
         }else if(_gesture == AriaBleService.GESTURE_UP){
 
@@ -322,7 +295,7 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
         }else if(_gesture == AriaBleService.GESTURE_DOWN){
 
-            musicManager.next();
+            //musicManager.next();
 
         }
 
@@ -336,29 +309,19 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
     public void onGoProNotFound(){
 
-        DataMap map = new DataMap();
-        map.putInt(SmartwatchManager.GOPRO_STATUS, SmartwatchManager.GOPRO_STATUS_NOT_FOUND);
-        smartwatchManager.writeSharedData(SmartwatchManager.GOPRO_PATH, map);
 
     }//onGoProNotFound
 
 
     public void onGoProConnected(){
 
-        DataMap map = new DataMap();
-        map.putInt(SmartwatchManager.GOPRO_STATUS, SmartwatchManager.GOPRO_STATUS_CONNECTED);
-        smartwatchManager.writeSharedData(SmartwatchManager.GOPRO_PATH, map);
-
-        goProManager.doAction(GoProManager.ACTION_TURN_ON);
+        //goProManager.doAction(GoProManager.ACTION_TURN_ON);
 
     }//onGoProConnected
 
 
     public void onGoProDisconnected(){
 
-        DataMap map = new DataMap();
-        map.putInt(SmartwatchManager.GOPRO_STATUS, SmartwatchManager.GOPRO_STATUS_NOT_FOUND);
-        smartwatchManager.writeSharedData(SmartwatchManager.GOPRO_PATH, map);
 
     }//onGoProDisconnected
 
@@ -371,11 +334,6 @@ public class AriaService extends Service implements AriaConnectionListener, ArsL
 
     public void onGoProActionError(int _action){
 
-        DataMap map = new DataMap();
-        map.putInt(SmartwatchManager.GOPRO_STATUS, SmartwatchManager.GOPRO_STATUS_NOT_FOUND);
-        smartwatchManager.writeSharedData(SmartwatchManager.GOPRO_PATH, map);
-
-        goProManager.connect();
 
     }//onGoProActionError
 

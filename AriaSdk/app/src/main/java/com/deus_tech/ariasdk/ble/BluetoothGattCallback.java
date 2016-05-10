@@ -179,7 +179,7 @@ public class BluetoothGattCallback extends android.bluetooth.BluetoothGattCallba
 
     public void	onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status){
 
-        if(status == BluetoothGatt.GATT_SUCCESS){
+         if(status == BluetoothGatt.GATT_SUCCESS){
 
             if(descriptor.getCharacteristic().getUuid().equals(CalibrationBleService.CALIBRATION_QUALITY_UUID) && calibrationListener != null){
 

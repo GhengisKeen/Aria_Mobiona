@@ -10,5 +10,6 @@
 
     <color name="bgOk">#abfcab</color>
     <color name="bgError">#ff9c9c</color>
+    <color name="grey">#706c6c</color>
 
 </resources>

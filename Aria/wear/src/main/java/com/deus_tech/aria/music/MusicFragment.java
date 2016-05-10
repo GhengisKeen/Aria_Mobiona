@@ -31,7 +31,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Sma
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.smartphoneManager.addListener(this);
+        //mainActivity.smartphoneManager.addListener(this);
 
         View rootView = null;
 
@@ -82,7 +82,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Sma
 
         super.onDestroyView();
 
-        mainActivity.smartphoneManager.removeListener(this);
+        //mainActivity.smartphoneManager.removeListener(this);
 
     }//onDestroyView
 
@@ -112,7 +112,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener, Sma
 
     public void close(){
 
-        mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
+       // mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
 
     }//close
 

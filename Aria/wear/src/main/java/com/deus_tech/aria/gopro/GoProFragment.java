@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.deus_tech.aria.MainActivity;
 import com.deus_tech.aria.R;
-import com.deus_tech.aria.dashboard.AppModel;
 import com.deus_tech.aria.smartphone.SmartphoneListener;
 import com.deus_tech.aria.smartphone.SmartphoneManager;
 import com.google.android.gms.wearable.DataMap;
@@ -32,7 +31,7 @@ public class GoProFragment extends Fragment implements View.OnClickListener, Sma
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.smartphoneManager.addListener(this);
+        //mainActivity .smartphoneManager.addListener(this);
 
         View rootView = null;
 
@@ -63,7 +62,7 @@ public class GoProFragment extends Fragment implements View.OnClickListener, Sma
 
         super.onStart();
 
-        mainActivity.smartphoneManager.readSharedData(SmartphoneManager.GOPRO_PATH);
+        //mainActivity.smartphoneManager.readSharedData(SmartphoneManager.GOPRO_PATH);
 
     }//onStart
 
@@ -72,7 +71,7 @@ public class GoProFragment extends Fragment implements View.OnClickListener, Sma
 
         super.onDestroyView();
 
-        mainActivity.smartphoneManager.removeListener(this);
+        //mainActivity.smartphoneManager.removeListener(this);
 
     }//onDestroyView
 
@@ -121,7 +120,7 @@ public class GoProFragment extends Fragment implements View.OnClickListener, Sma
 
     public void close(){
 
-        mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
+        //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
 
     }//close
 

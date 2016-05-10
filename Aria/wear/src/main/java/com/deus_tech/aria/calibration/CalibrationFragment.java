@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.deus_tech.aria.MainActivity;
 import com.deus_tech.aria.R;
-import com.deus_tech.aria.smartphone.SmartphoneListener;
-import com.deus_tech.aria.smartphone.SmartphoneManager;
-import com.google.android.gms.wearable.DataMap;
 
 
 public class CalibrationFragment extends Fragment implements View.OnClickListener{
@@ -66,7 +63,7 @@ public class CalibrationFragment extends Fragment implements View.OnClickListene
 
     public void close(){
 
-        mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
+        //mainActivity.changeCurrentView(SmartphoneManager.ROUTER_VIEW_DASHBOARD);
 
     }//close
 

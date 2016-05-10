@@ -316,7 +316,6 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
                 if(ars != null){
                     ars.removeInitListener(this);
                 }
-
                 ars = new AriaBleService(context, btGatt, service);
                 ars.addInitListener(this);
                 btGattCallback.setArsListener(ars);
@@ -327,6 +326,7 @@ public class Aria extends BroadcastReceiver implements BluetoothBroadcastListene
 
         if(cas != null){
             cas.init();
+            //cas.readCalibrationMode();
         }
 
     }//onDeviceConnected
