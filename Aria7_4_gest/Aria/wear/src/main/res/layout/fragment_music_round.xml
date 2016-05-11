@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_music_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Music"
+        android:background="@color/bg2"
+        android:textColor="@color/text_button"
+        android:gravity="center_vertical|center_horizontal"/>
+
+
+    <Button
+        android:id="@+id/b_music_start"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
+        android:background="@drawable/sl_bg_button"
+        android:textColor="@color/text_button"
+        android:text="Launch player"
+        android:layout_below="@+id/tv_music_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="14dp"/>
+
+    <Button
+        android:id="@+id/b_music_close"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/close_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"/>
+
+</RelativeLayout>

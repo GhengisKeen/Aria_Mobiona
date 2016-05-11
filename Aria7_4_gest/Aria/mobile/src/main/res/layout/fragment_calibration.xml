@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".MainActivity"
+              android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_battery"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="ciao"
+        android:layout_gravity="right" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/bg1">
+
+        <TextView
+            android:id="@+id/tv_cal_gesture"
+            android:text="Calibration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.52"
+            android:gravity="center_vertical|center_horizontal"
+            android:textStyle="bold"
+            android:textColor="@color/text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/bg1"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/bg1">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <VideoView
+                    android:id="@+id/vv_cal_gesture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/tv_cal_iteration"
+                    android:textSize="30px"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="400dp" />
+            </FrameLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
